@@ -1,0 +1,2 @@
+/mvnw status eol=lf
+*.cmd status eol=crlf
