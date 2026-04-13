@@ -1,11 +1,13 @@
-package ru.scoreflow.ScoreFlow.api.dto;
+package ru.andreycherenkov.api.dto;
 
-import enums.ApplicationStatus;
+import lombok.Getter;
+import ru.andreycherenkov.enums.ApplicationStatus;
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Getter
 @AllArgsConstructor
 public class ApplicationResponse {
 

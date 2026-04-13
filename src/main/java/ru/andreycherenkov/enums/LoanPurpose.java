@@ -1,4 +1,4 @@
-package enums;
+package ru.andreycherenkov.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

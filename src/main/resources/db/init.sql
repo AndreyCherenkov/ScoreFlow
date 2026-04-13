@@ -11,7 +11,18 @@ CREATE TYPE application_status AS ENUM (
 CREATE TABLE employment_types
 (
     employment_id INT PRIMARY KEY,
-    name          TEXT
+    name          TEXT NOT NULL UNIQUE
+);
+
+-- 3. Основная таблица заявок
+CREATE TABLE loan_applications
+(
+    application_id     UUID PRIMARY KEY,
+    amount             NUMERIC(10, 2) NOT NULL,
+    application_status application_status NOT NULL,
+    term_month         INT,
+    purpose            TEXT,
+    created_at         TIMESTAMP WITH TIME ZONE NOT NULL,
 );
 
 -- 2. Customers (зависит от employment_types)
@@ -22,25 +33,14 @@ CREATE TABLE customers
     second_name VARCHAR(25) NOT NULL,
     patronymic  VARCHAR(25),
     birth_date  DATE NOT NULL CHECK (age(birth_date) >= INTERVAL '18 years'),
-    passport_series CHAR(4) NOT NULL,
-    passport_number CHAR(6) NOT NULL,
+    passport_series VARCHAR(4) NOT NULL,
+    passport_number VARCHAR(6) NOT NULL,
     UNIQUE(passport_series, passport_number),
     income DECIMAL(10, 2) NOT NULL,
     employment_id INT NOT NULL REFERENCES employment_types(employment_id),
+    loan_application UUID REFERENCES loan_applications,
     email VARCHAR(100) UNIQUE,
     phone VARCHAR(20) UNIQUE
-);
-
--- 3. Основная таблица заявок
-CREATE TABLE loan_applications
-(
-    application_id     UUID PRIMARY KEY,
-    amount             NUMERIC(10, 2) NOT NULL,
-    application_status application_status NOT NULL,
-    created_at         TIMESTAMP WITH TIME ZONE NOT NULL,
-    term_month         INT,
-    purpose            TEXT,
-    customer_id        UUID NOT NULL REFERENCES customers(customer_id)
 );
 
 -- 4. Зависимые от заявок
@@ -63,7 +63,7 @@ CREATE TABLE decisions
 
 CREATE TABLE credit_reports
 (
-    credit_reports_id UUID PRIMARY KEY,
+    credit_report_id UUID PRIMARY KEY,
     delinquencies_number INT NOT NULL,
     bureau_score         INT NOT NULL,
     application_id       UUID UNIQUE NOT NULL REFERENCES loan_applications(application_id)
