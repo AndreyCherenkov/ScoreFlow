@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Getter
 @AllArgsConstructor
-public class ApplicationResponse {
+public class ApplicationCreateResponse {
 
     private final UUID uuid;
     private final ApplicationStatus status;
