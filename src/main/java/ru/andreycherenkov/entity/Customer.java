@@ -5,14 +5,20 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ru.andreycherenkov.validator.Adult;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Entity(name = "customers")
@@ -38,6 +44,10 @@ public class Customer {
     private LocalDate birthDate;
 
     @NotBlank
+    @Column(name = "password", nullable = false)
+    private String passwordHash;
+
+    @NotBlank
     @Size(min = 4, max = 4)
     @Column(name = "passport_series", nullable = false)
     private String passportSeries;
@@ -56,13 +66,16 @@ public class Customer {
     private String email;
 
     //todo @PhoneNumber
-    @Column(name = "phone", unique = true)
+    @Column(name = "phone", unique = true, nullable = false)
     private String phone;
 
 
     //todo внешние ключи
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) //todo matbe many-to-many due to one man can work on many jobs
     @JoinColumn(name = "employment_id", nullable = false)
     private Employment employment;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<RefreshToken> tokens = new ArrayList<>();
 }
 
