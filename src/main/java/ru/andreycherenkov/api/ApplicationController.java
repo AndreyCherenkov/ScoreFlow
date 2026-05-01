@@ -22,8 +22,8 @@ public class ApplicationController {
 
     //todo define response dto
     @GetMapping("/{applicationId}")
-    public ApplicationCreateResponse getApplication(@PathVariable UUID applicationId) {
-        return applicationService.getApplication(applicationId);
+    public ResponseEntity<LoanApplicationResponse> getApplication(@PathVariable UUID applicationId) {
+        return ResponseEntity.ok(applicationService.getApplication(applicationId));
     }
 
     @GetMapping
