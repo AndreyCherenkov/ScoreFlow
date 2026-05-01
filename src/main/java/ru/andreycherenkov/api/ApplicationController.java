@@ -1,12 +1,16 @@
 package ru.andreycherenkov.api;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.andreycherenkov.api.dto.ApplicationCreateRequest;
 import ru.andreycherenkov.api.dto.ApplicationCreateResponse;
+import ru.andreycherenkov.api.dto.LoanApplicationResponse;
+import ru.andreycherenkov.enums.ApplicationStatus;
 import ru.andreycherenkov.service.LoanApplicationService;
 
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -23,8 +27,11 @@ public class ApplicationController {
     }
 
     @GetMapping
-    public List<ApplicationCreateResponse> getAllApplications() { //todo выборка по параметрам запроса
-        throw new UnsupportedOperationException();
+    public ResponseEntity<Collection<LoanApplicationResponse>> getAllApplications(
+            @RequestParam(required = false) UUID userId,
+            @RequestParam(required = false) ApplicationStatus status
+    ) {
+        return ResponseEntity.ok(applicationService.getAllByParams(userId, status));
     }
 
     @PostMapping

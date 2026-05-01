@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
 import ru.andreycherenkov.validator.Adult;
 
 import java.math.BigDecimal;
@@ -21,6 +22,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@FieldNameConstants
 @Entity(name = "customers")
 public class Customer {
 

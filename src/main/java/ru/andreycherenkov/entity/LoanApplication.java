@@ -3,6 +3,7 @@ package ru.andreycherenkov.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
@@ -13,9 +14,10 @@ import java.time.Instant;
 import java.util.UUID;
 
 //todo builder?
-@Entity(name = "loan_applications")
 @NoArgsConstructor
 @Getter
+@FieldNameConstants
+@Entity(name = "loan_applications")
 public class LoanApplication {
 
     @Id

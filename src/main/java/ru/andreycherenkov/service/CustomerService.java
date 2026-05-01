@@ -1,9 +1,10 @@
 package ru.andreycherenkov.service;
 
 import lombok.AllArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.andreycherenkov.api.dto.AuthRequest;
+import ru.andreycherenkov.api.dto.AuthResponse;
 import ru.andreycherenkov.api.dto.RegistrationRequest;
 import ru.andreycherenkov.api.dto.RegistrationResponse;
 import ru.andreycherenkov.entity.Customer;
@@ -12,7 +13,7 @@ import ru.andreycherenkov.repository.EmploymentRepository;
 
 @AllArgsConstructor
 @Service
-public class RegistrationService {
+public class CustomerService {
 
     private final CustomerRepository customerRepository;
     private final EmploymentRepository employmentRepository;
@@ -41,5 +42,9 @@ public class RegistrationService {
         );
 
         return new RegistrationResponse(String.valueOf(customer.getCustomerId()));
+    }
+
+    public AuthResponse login(AuthRequest request) {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 }
