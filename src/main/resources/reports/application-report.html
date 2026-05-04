@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            color: #222;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .section {
+            margin-top: 20px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        td {
+            padding: 6px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .label {
+            font-weight: bold;
+            width: 40%;
+            background-color: #f5f5f5;
+        }
+
+        .status-approved {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-rejected {
+            color: red;
+            font-weight: bold;
+        }
+
+        .status-processing {
+            color: orange;
+            font-weight: bold;
+        }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 10px;
+            text-align: right;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="title">Отчёт по кредитной заявке</div>
+    <div>№ <span th:text="${applicationId}"></span></div>
+</div>
+
+<div class="section">
+    <div class="section-title">Основная информация</div>
+
+    <table>
+        <tr>
+            <td class="label">Сумма кредита</td>
+            <td th:text="${amount} + ' ₽'"></td>
+        </tr>
+
+        <tr>
+            <td class="label">Срок (месяцев)</td>
+            <td th:text="${termMonth}"></td>
+        </tr>
+
+        <tr>
+            <td class="label">Цель кредита</td>
+            <td th:text="${purpose}"></td>
+        </tr>
+
+        <tr>
+            <td class="label">Дата создания</td>
+            <td th:text="${#temporals.format(createdAt, 'dd.MM.yyyy HH:mm')}"></td>
+        </tr>
+
+        <tr>
+            <td class="label">Статус</td>
+            <td>
+                <span th:text="${applicationStatus}"
+                      th:classappend="
+                        ${applicationStatus.name() == 'APPROVED'} ? 'status-approved' :
+                        (${applicationStatus.name() == 'REJECTED'} ? 'status-rejected' : 'status-processing')
+                      ">
+                </span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="section">
+    <div class="section-title">Результат скоринга</div>
+
+    <table>
+        <tr>
+            <td class="label">Решение</td>
+            <td th:text="${applicationStatus.name() == 'APPROVED'} ? 'Одобрено' : 'Не одобрено'"></td>
+        </tr>
+
+        <tr>
+            <td class="label">Комментарий</td>
+            <td th:text="${comment != null ? comment : '—'}"></td>
+        </tr>
+    </table>
+</div>
+
+<div class="footer">
+    Сгенерировано системой кредитного скоринга<br/>
+    Дата: <span th:text="${#temporals.format(generatedAt, 'dd.MM.yyyy HH:mm')}"></span>
+</div>
+
+</body>
+</html>

@@ -6,7 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum LoanPurpose {
-    CAR("car"),
+    CAR("CAR"),
     ;
 
     private final String purpose;

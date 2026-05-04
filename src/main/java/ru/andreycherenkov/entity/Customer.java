@@ -79,5 +79,7 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<RefreshToken> tokens = new ArrayList<>();
-}
 
+    @OneToMany(mappedBy = "customer") //todo донастроить
+    private final List<Document> documents = new ArrayList<>();
+}
