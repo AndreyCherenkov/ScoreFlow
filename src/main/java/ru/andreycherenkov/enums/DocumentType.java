@@ -6,7 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum DocumentType {
-    APPLICATION_PDF("APPLICATION_PDF"),
+    APPLICATION_REPORT("APPLICATION_REPORT"),
     SCORING_REPORT("SCORING_REPORT"),
     CREDIT_REPORT("CREDIT_REPORT"),
     CONTRACT("CONTRACT"),

@@ -14,7 +14,7 @@ CREATE TYPE application_status AS ENUM (
 );
 
 CREATE TYPE document_type AS ENUM (
-    'APPLICATION_PDF',
+    'APPLICATION_REPORT',
     'SCORING_REPORT',
     'CREDIT_REPORT',
     'CONTRACT',

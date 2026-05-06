@@ -2,26 +2,41 @@ package ru.andreycherenkov.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import ru.andreycherenkov.entity.Document;
+import ru.andreycherenkov.entity.DocumentContent;
 import ru.andreycherenkov.entity.LoanApplication;
+import ru.andreycherenkov.enums.DocumentType;
 import ru.andreycherenkov.repository.ApplicationRepository;
+import ru.andreycherenkov.repository.CustomerRepository;
+import ru.andreycherenkov.repository.DocumentRepository;
 
 import java.util.UUID;
 
 //todo в шаблоне заявке определить поведение для всех ApplicationStatus
 @Service
 @AllArgsConstructor
-public class PdfService {
+public class DocumentService {
 
+    private final CustomerRepository customerRepository;
     private final ApplicationRepository applicationRepository;
+    private final DocumentRepository documentRepository;
 
     private final TemplateEngine templateEngine;
 
+    //todo saving in db/MinIO OR in another objective storage (yandex for example)
+    //todo получать пользователя не из БД, а из контекста безопасности
+    //todo генерация другим способом?
     //todo method safety
-    public UUID generateApplicationReport(UUID applicationId) {
+    @Transactional
+    public UUID generateApplicationReport(UUID applicationId, UUID customerId) {
+
         var application = applicationRepository.findById(applicationId)
-                .orElseThrow(() -> new RuntimeException("Application not found: " + applicationId)); //todo define exception
+                .orElseThrow(() -> new RuntimeException("Application not found: " + applicationId));
+
+        var customer = customerRepository.getReferenceById(customerId);
 
         var context = new Context();
         context.setVariable(LoanApplication.Fields.applicationId, application.getApplicationId());
@@ -30,8 +45,25 @@ public class PdfService {
         context.setVariable(LoanApplication.Fields.purpose, application.getPurpose());
 
         var html = templateEngine.process("application-report.html", context);
-        //todo saving in db/MinIO OR in another objective storage (yandex for example)
-        throw new UnsupportedOperationException("Not yet implemented");
+        var bytes = html.getBytes();
+
+        var document = Document.builder()
+                .contentType("application/pdf")
+                .fileSize(bytes.length)
+                .documentType(DocumentType.APPLICATION_REPORT)
+                .storageType("DB")
+                .storagePath("./reports")
+                .customer(customer)
+                .build();
+
+        var content = new DocumentContent();
+        content.setContent(html.getBytes());
+
+        document.setContent(content);
+
+        documentRepository.save(document);
+
+        return document.getDocumentId();
     }
 
 //    public byte[] generateScoreReport(UUID applicationId) {

@@ -1,17 +1,21 @@
 package ru.andreycherenkov.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
 import ru.andreycherenkov.enums.DocumentType;
 
 import java.time.Instant;
 import java.util.UUID;
 
 //todo DocumentVersions entity
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
+@Setter
 @Entity(name = "documents")
 public class Document {
 
@@ -24,15 +28,17 @@ public class Document {
     private String contentType;
 
     @Column(name = "file_size", nullable = false)
-    private Long fileSize;
+    private Integer fileSize;
 
+    @Enumerated(EnumType.STRING)
+    @JdbcType(value = PostgreSQLEnumJdbcType.class)
     @Column(name = "document_type", nullable = false)
     private DocumentType documentType;
 
-    @Column(name = "storage_type")
+    @Column(name = "storage_type", nullable = false)
     private String storageType;
 
-    @Column(name = "storage_path")
+    @Column(name = "storage_path", nullable = false)
     private String storagePath;
 
     @CreationTimestamp

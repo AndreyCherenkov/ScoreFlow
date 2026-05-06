@@ -19,9 +19,10 @@ public class DocumentContent {
     @JoinColumn(name = "document_id")
     private Document document;
 
-    @Lob
     @Column(nullable = false)
     private byte[] content;
 
-
+    public void setContent(byte[] content) {
+        this.content = content;
+    }
 }
