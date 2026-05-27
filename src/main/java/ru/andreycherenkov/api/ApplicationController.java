@@ -3,13 +3,12 @@ package ru.andreycherenkov.api;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.andreycherenkov.api.dto.ApplicationCreateRequest;
-import ru.andreycherenkov.api.dto.ApplicationCreateResponse;
-import ru.andreycherenkov.api.dto.LoanApplicationResponse;
+import ru.andreycherenkov.dto.ApplicationCreateRequest;
+import ru.andreycherenkov.dto.ApplicationCreateResponse;
+import ru.andreycherenkov.dto.LoanApplicationResponse;
 import ru.andreycherenkov.enums.ApplicationStatus;
 import ru.andreycherenkov.service.LoanApplicationService;
 
-import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -20,7 +19,6 @@ public class ApplicationController {
 
     private LoanApplicationService applicationService;
 
-    //todo define response dto
     @GetMapping("/{applicationId}")
     public ResponseEntity<LoanApplicationResponse> getApplication(@PathVariable UUID applicationId) {
         return ResponseEntity.ok(applicationService.getApplication(applicationId));
@@ -36,6 +34,7 @@ public class ApplicationController {
 
     @PostMapping
     public ApplicationCreateResponse createApplication(@RequestBody ApplicationCreateRequest request) {
+        System.out.println(request);
         return applicationService.createLoanApplication(request);
     }
 

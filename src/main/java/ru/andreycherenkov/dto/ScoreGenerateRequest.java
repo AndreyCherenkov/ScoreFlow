@@ -1,4 +1,4 @@
-package ru.andreycherenkov.api.dto;
+package ru.andreycherenkov.dto;
 
 public class ScoreGenerateRequest {
 }

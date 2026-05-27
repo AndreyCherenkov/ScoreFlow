@@ -11,3 +11,7 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: true
+
+app:
+  security:
+    jwt: 4YmB3Nzc4WFl6QUJDREVGSElKS0xNTk9QUVJTVFVWV1hZWiEwMTIzNDU2Nzg5QGNoZXJlbmtvdg==

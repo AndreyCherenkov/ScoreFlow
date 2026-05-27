@@ -22,7 +22,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@FieldNameConstants
 @Entity(name = "customers")
 public class Customer {
 
@@ -77,9 +76,20 @@ public class Customer {
     @JoinColumn(name = "employment_id", nullable = false)
     private Employment employment;
 
+    @OneToMany(mappedBy = "customer")
+    private List<LoanApplication> applications = new ArrayList<>();
+
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<RefreshToken> tokens = new ArrayList<>();
 
     @OneToMany(mappedBy = "customer") //todo донастроить
     private final List<Document> documents = new ArrayList<>();
+
+    public void addDocument(Document document) {
+        documents.add(document);
+    }
+
+    public void addRefreshToken(RefreshToken refreshToken) {
+        tokens.add(refreshToken);
+    }
 }

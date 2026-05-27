@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.andreycherenkov.api.dto.RegistrationRequest;
-import ru.andreycherenkov.api.dto.RegistrationResponse;
+import ru.andreycherenkov.dto.RegistrationRequest;
+import ru.andreycherenkov.dto.RegistrationResponse;
 import ru.andreycherenkov.service.CustomerService;
 
 @AllArgsConstructor

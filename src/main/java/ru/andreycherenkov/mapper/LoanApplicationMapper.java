@@ -2,7 +2,7 @@ package ru.andreycherenkov.mapper;
 
 import org.springframework.stereotype.Component;
 import ru.andreycherenkov.entity.LoanApplication;
-import ru.andreycherenkov.api.dto.LoanApplicationResponse;
+import ru.andreycherenkov.dto.LoanApplicationResponse;
 
 @Component
 public class LoanApplicationMapper {

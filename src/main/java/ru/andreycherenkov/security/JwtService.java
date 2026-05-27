@@ -12,20 +12,23 @@ import java.security.Key;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.UUID;
 
 @Component
 public class JwtService {
 
-    @Value("app.security.jwt")
-    private static String KEY;
+    @Value("${app.security.jwt}")
+    private String jwtSecret;
 
-    @Value("spring.application.name")
-    private static String applicationName;
+    @Value("${spring.application.name}")
+    private String applicationName;
 
 
-    //todo user id validate
-    public String generateToken(String userId) {
+    //todo phone validate
+    public String generateToken(String phoneNumber, UUID userId) {
         return Jwts.builder()
+                .setSubject(phoneNumber)
+                .claim("phoneNumber", phoneNumber)
                 .claim("userId", userId)
                 .setIssuer(applicationName)
                 .setIssuedAt(Date.from(Instant.now()))
@@ -34,9 +37,11 @@ public class JwtService {
                 .compact();
     }
 
-    public String generateRefreshToken(String phoneNumber) { //todo mclaims map
+    public String generateRefreshToken(String phoneNumber, UUID userId) { //todo mclaims map
         return Jwts.builder()
+                .setSubject(phoneNumber)
                 .claim("phoneNumber", phoneNumber)
+                .claim("userId", userId)
                 .setIssuer(applicationName)
                 .setIssuedAt(Date.from(Instant.now()))
                 .setExpiration(Date.from(Instant.now().plus(24, ChronoUnit.HOURS)))
@@ -52,8 +57,11 @@ public class JwtService {
     }
 
     public String extractPhoneNumber(String token) {
-        var claims = extractClaims(token);
-        return claims.getBody().get("phoneNumber", String.class);
+        return extractClaims(token).getBody().getSubject(); //todo  читать
+    }
+
+    public String extractUserId(String token) {
+        return extractClaims(token).getBody().get("userId").toString();
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {
@@ -61,16 +69,16 @@ public class JwtService {
         return phoneNumber.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
-    private Boolean isTokenExpired(String bearerToken) {
-        return extractExpiry(bearerToken).before(new Date());
-    }
-
     public Date extractExpiry(String bearerToken) {
         return extractClaims(bearerToken).getBody().getExpiration();
     }
 
     private Key getKey() {
-        return Keys.hmacShaKeyFor(KEY.getBytes());
+        return Keys.hmacShaKeyFor(jwtSecret.getBytes());
+    }
+
+    private Boolean isTokenExpired(String bearerToken) {
+        return extractExpiry(bearerToken).before(new Date());
     }
 
 }

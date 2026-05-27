@@ -7,7 +7,6 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import ru.andreycherenkov.entity.Document;
 import ru.andreycherenkov.entity.DocumentContent;
-import ru.andreycherenkov.entity.LoanApplication;
 import ru.andreycherenkov.enums.DocumentType;
 import ru.andreycherenkov.repository.ApplicationRepository;
 import ru.andreycherenkov.repository.CustomerRepository;
@@ -39,10 +38,10 @@ public class DocumentService {
         var customer = customerRepository.getReferenceById(customerId);
 
         var context = new Context();
-        context.setVariable(LoanApplication.Fields.applicationId, application.getApplicationId());
-        context.setVariable(LoanApplication.Fields.amount, application.getAmount());
-        context.setVariable(LoanApplication.Fields.termMonth, application.getTermMonth());
-        context.setVariable(LoanApplication.Fields.purpose, application.getPurpose());
+        context.setVariable("applicationId", application.getApplicationId());
+        context.setVariable("amount", application.getAmount());
+        context.setVariable("termMonth", application.getTermMonth());
+        context.setVariable("purpose", application.getPurpose());
 
         var html = templateEngine.process("application-report.html", context);
         var bytes = html.getBytes();
@@ -52,7 +51,7 @@ public class DocumentService {
                 .fileSize(bytes.length)
                 .documentType(DocumentType.APPLICATION_REPORT)
                 .storageType("DB")
-                .storagePath("./reports")
+                .storagePath("templates")
                 .customer(customer)
                 .build();
 

@@ -1,4 +1,4 @@
-package ru.andreycherenkov.api.dto;
+package ru.andreycherenkov.dto;
 
 import lombok.Getter;
 import ru.andreycherenkov.enums.ApplicationStatus;

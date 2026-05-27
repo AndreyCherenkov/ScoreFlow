@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.andreycherenkov.api.dto.ApplicationCreateRequest;
-import ru.andreycherenkov.api.dto.ApplicationCreateResponse;
+import ru.andreycherenkov.dto.ApplicationCreateRequest;
+import ru.andreycherenkov.dto.ApplicationCreateResponse;
 import ru.andreycherenkov.entity.LoanApplication;
-import ru.andreycherenkov.api.dto.LoanApplicationResponse;
+import ru.andreycherenkov.dto.LoanApplicationResponse;
 import ru.andreycherenkov.enums.ApplicationStatus;
 import ru.andreycherenkov.mapper.LoanApplicationMapper;
 import ru.andreycherenkov.repository.ApplicationRepository;
@@ -39,7 +39,7 @@ public class LoanApplicationService {
 
     @Transactional
     public ApplicationCreateResponse createLoanApplication(ApplicationCreateRequest request) {
-        customerRepository.findById(request.getCustomerId()).orElseThrow(
+        var customer = customerRepository.findById(request.getCustomerId()).orElseThrow(
                 () -> new IllegalArgumentException("Customer not found") //todo define exception type, maybe needs custom type?
         );
 
@@ -47,7 +47,8 @@ public class LoanApplicationService {
                 request.getAmount(),
                 ApplicationStatus.NEW,
                 request.getTermsMonths(),
-                request.getPurpose()
+                request.getPurpose(),
+                customer
         );
 
         var saved = applicationRepository.save(application);

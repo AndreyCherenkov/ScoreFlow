@@ -3,22 +3,38 @@ package ru.andreycherenkov.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.FieldNameConstants;
-import org.hibernate.annotations.CreationTimestamp;
+import lombok.Setter;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
 import ru.andreycherenkov.enums.ApplicationStatus;
+import ru.andreycherenkov.enums.LoanPurpose;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 //todo builder?
 @NoArgsConstructor
 @Getter
-@FieldNameConstants
+@Setter
 @Entity(name = "loan_applications")
 public class LoanApplication {
+
+    public LoanApplication(
+            BigDecimal amount,
+            ApplicationStatus applicationStatus,
+            Integer termMonth,
+            LoanPurpose purpose,
+            Customer customer
+    ) {
+        this.amount = amount;
+        this.applicationStatus = applicationStatus;
+        this.termMonth = termMonth;
+        this.purpose = purpose;
+        this.customer = customer;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -36,25 +52,23 @@ public class LoanApplication {
     @Column(name = "term_month")
     private Integer termMonth;
 
+    @Enumerated(EnumType.STRING) // Меняем String на Enum
     @Column(name = "purpose")
-    private String purpose;
+    private LoanPurpose purpose;
 
-    @CreationTimestamp
     @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+    private final Instant createdAt = Instant.now(); //todo fix
 
     //todo связи с сущностями
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
 
+    @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ScoringResult> scoringResults = new ArrayList<>();
 
-    public LoanApplication(
-            BigDecimal amount,
-            ApplicationStatus applicationStatus,
-            Integer termMonth,
-            String purpose
-    ) {
-        this.amount = amount;
-        this.applicationStatus = applicationStatus;
-        this.termMonth = termMonth;
-        this.purpose = purpose;
+    public void addScoringResult(ScoringResult scoringResult) {
+        scoringResults.add(scoringResult);
     }
+
 }

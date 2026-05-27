@@ -11,5 +11,5 @@ public enum ApplicationStatus {
     APPROVED("APPROVED"),
     REJECTED("REJECTED");
 
-    private final String status;
+    private final String name;
 }

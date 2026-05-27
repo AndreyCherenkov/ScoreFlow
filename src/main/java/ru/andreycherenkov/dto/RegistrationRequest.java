@@ -1,4 +1,4 @@
-package ru.andreycherenkov.api.dto;
+package ru.andreycherenkov.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.Getter;

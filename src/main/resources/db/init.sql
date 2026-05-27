@@ -33,21 +33,12 @@ CREATE TABLE employment_types
 INSERT INTO employment_types (name)
 VALUES ('FULL_TIME'),
        ('PART_TIME'),
-       ('SELF_EMPLOYED');
+       ('SELF_EMPLOYED'),
+        ('UNEMPLOYED');
 
 -- =====================================================
 -- 3. CORE TABLES
 -- =====================================================
-CREATE TABLE loan_applications
-(
-    application_id     UUID PRIMARY KEY,
-    amount             NUMERIC(10, 2)           NOT NULL,
-    application_status application_status       NOT NULL,
-    term_month         INT,
-    purpose            TEXT,
-    created_at         TIMESTAMP WITH TIME ZONE NOT NULL
-);
-
 CREATE TABLE customers
 (
     customer_id UUID PRIMARY KEY,
@@ -70,11 +61,21 @@ CREATE TABLE customers
     employment_id INT NOT NULL
         REFERENCES employment_types (employment_id),
 
-    loan_application UUID
-        REFERENCES loan_applications (application_id),
-
     email VARCHAR(100) UNIQUE,
     phone VARCHAR(20) NOT NULL UNIQUE
+);
+
+CREATE TABLE loan_applications
+(
+    application_id     UUID PRIMARY KEY,
+    customer_id        UUID NOT NULL
+        REFERENCES customers(customer_id),
+
+    amount             NUMERIC(10, 2)           NOT NULL,
+    application_status application_status       NOT NULL,
+    term_month         INT,
+    purpose            TEXT,
+    created_at         TIMESTAMP WITH TIME ZONE NOT NULL
 );
 
 -- =====================================================
@@ -82,8 +83,7 @@ CREATE TABLE customers
 -- =====================================================
 CREATE TABLE refresh_tokens
 (
-    token_id        BIGSERIAL PRIMARY KEY,
-    token_hash      VARCHAR(255) NOT NULL,
+    token_hash      VARCHAR(1024) PRIMARY KEY,
     created_at      TIMESTAMP    NOT NULL,
     expiration_date TIMESTAMP    NOT NULL,
     revoked         BOOLEAN      NOT NULL DEFAULT FALSE,
@@ -104,12 +104,10 @@ CREATE TABLE scoring_results
     scoring_id     UUID PRIMARY KEY,
     score          INT                      NOT NULL,
     calculated_at  TIMESTAMP WITH TIME ZONE NOT NULL,
-    version        INT                      NOT NULL,
 
     application_id UUID NOT NULL
-        REFERENCES loan_applications (application_id),
+        REFERENCES loan_applications (application_id)
 
-    UNIQUE (application_id, version)
 );
 
 CREATE TABLE decisions
@@ -191,14 +189,11 @@ CREATE TABLE document_versions
         REFERENCES documents(document_id)
             ON DELETE CASCADE,
 
-    version      INT NOT NULL,
-
     storage_path TEXT   NOT NULL,
     file_size    BIGINT NOT NULL,
 
-    created_at   TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_at   TIMESTAMP WITH TIME ZONE NOT NULL
 
-    UNIQUE (document_id, version)
 );
 
 -- =====================================================

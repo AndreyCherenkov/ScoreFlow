@@ -1,17 +1,15 @@
 package ru.andreycherenkov.service;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.andreycherenkov.api.dto.AuthRequest;
-import ru.andreycherenkov.api.dto.AuthResponse;
-import ru.andreycherenkov.api.dto.RegistrationRequest;
-import ru.andreycherenkov.api.dto.RegistrationResponse;
+import ru.andreycherenkov.dto.RegistrationRequest;
+import ru.andreycherenkov.dto.RegistrationResponse;
 import ru.andreycherenkov.entity.Customer;
 import ru.andreycherenkov.repository.CustomerRepository;
 import ru.andreycherenkov.repository.EmploymentRepository;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class CustomerService {
 
@@ -36,7 +34,7 @@ public class CustomerService {
                         .passportNumber(request.getPassportNumber())
                         .income(request.getIncome())
                         .email(request.getEmail())
-                        .phone(request.getPhone())
+                        .phone(normalizePhone(request.getPhone()))
                         .employment(employment)
                         .build()
         );
@@ -44,7 +42,9 @@ public class CustomerService {
         return new RegistrationResponse(String.valueOf(customer.getCustomerId()));
     }
 
-    public AuthResponse login(AuthRequest request) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    private static String normalizePhone(String phone) {
+
+        return phone
+                .replaceAll("[^0-9]", "");
     }
 }

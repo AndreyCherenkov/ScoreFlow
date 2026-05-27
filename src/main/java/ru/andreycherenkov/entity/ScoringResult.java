@@ -13,6 +13,11 @@ import java.util.UUID;
 @Entity(name = "scoring_results")
 public class ScoringResult {
 
+    public ScoringResult(Integer score, LoanApplication application) {
+        this.score = score;
+        this.application = application;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "scoring_id")
@@ -21,13 +26,8 @@ public class ScoringResult {
     @Column(name = "score", nullable = false)
     private Integer score;
 
-    @CreationTimestamp
     @Column(name = "calculated_at", nullable = false)
-    private Instant calculatedAt;
-
-    @Version
-    @Column(name = "version", nullable = false)
-    private Integer version;
+    private final Instant calculatedAt = Instant.now(); //todo fix
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "application_id", nullable = false)

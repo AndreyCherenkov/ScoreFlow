@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("api/v1/document")
+@RequestMapping("/api/v1/document")
 public class DocumentController {
 
     private final DocumentService documentService;
