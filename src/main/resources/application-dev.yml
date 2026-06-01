@@ -12,6 +12,18 @@ spring:
       ddl-auto: validate
     show-sql: true
 
+  mail:
+    host: smtp.mail.ru
+    port: 587
+    username: ${SMTP_EMAIL}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 app:
   security:
-    jwt: 4YmB3Nzc4WFl6QUJDREVGSElKS0xNTk9QUVJTVFVWV1hZWiEwMTIzNDU2Nzg5QGNoZXJlbmtvdg==
+    jwt: ${JWT_SECRET}
