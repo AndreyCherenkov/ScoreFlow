@@ -21,13 +21,15 @@ public class ScoringService {
     private final ScoringResultRepository scoringResultRepository;
     private final ApplicationRepository applicationRepository;
 
+    private final LoanApplicationService applicationService;
+
     private static final int PASSING_SCORE = 150;
 
     @Transactional
-    public ScoringResponse computeScore(UUID applicationId) { //todo RESPONSE
+    public ScoringResponse computeScore(UUID applicationId) {
         var application = applicationRepository.findById(applicationId)
                 .orElseThrow(() -> new RuntimeException("Application not found: " + applicationId));
-        application.setApplicationStatus(ApplicationStatus.IN_REVIEW);
+        applicationService.updateStatus(application, ApplicationStatus.IN_REVIEW);
 
         var totalScore = scoringRules.stream()
                 .mapToInt(rule -> rule.evaluate(application))
@@ -39,9 +41,9 @@ public class ScoringService {
         ));
 
         if (totalScore >= PASSING_SCORE) {
-            application.setApplicationStatus(ApplicationStatus.APPROVED);
+            applicationService.updateStatus(application, ApplicationStatus.APPROVED);
         } else {
-            application.setApplicationStatus(ApplicationStatus.REJECTED);
+            applicationService.updateStatus(application, ApplicationStatus.REJECTED);
         }
 
         applicationRepository.save(application);

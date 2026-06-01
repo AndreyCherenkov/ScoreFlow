@@ -1,6 +1,7 @@
 package ru.andreycherenkov.service;
 
 import lombok.AllArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,8 @@ import java.time.ZoneId;
 import java.util.Collection;
 import java.util.UUID;
 
+import static ru.andreycherenkov.util.EventUtil.publishEmailEvent;
+
 @AllArgsConstructor
 @Service
 public class LoanApplicationService {
@@ -27,6 +30,8 @@ public class LoanApplicationService {
     private final ApplicationRepository applicationRepository;
 
     private final LoanApplicationMapper applicationMapper;
+
+    private final ApplicationEventPublisher publisher;
 
     public LoanApplicationResponse getApplication(UUID applicationId) {
         var application = applicationRepository
@@ -52,6 +57,9 @@ public class LoanApplicationService {
         );
 
         var saved = applicationRepository.save(application);
+
+        publishEmailEvent(publisher, application, ApplicationStatus.REGISTRATION, ApplicationStatus.NEW);
+
         return new ApplicationCreateResponse(
                 saved.getApplicationId(),
                 saved.getApplicationStatus(),
@@ -80,4 +88,12 @@ public class LoanApplicationService {
         );
         applicationRepository.deleteById(applicationId);
     }
+
+    public void updateStatus(LoanApplication application, ApplicationStatus newStatus) {
+        var oldStatus = application.getApplicationStatus();
+        application.setApplicationStatus(newStatus);
+
+        publishEmailEvent(publisher, application, oldStatus, newStatus);
+    }
+
 }
