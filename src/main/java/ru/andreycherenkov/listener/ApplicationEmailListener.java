@@ -13,11 +13,12 @@ public class ApplicationEmailListener {
 
     private final EmailService emailService;
 
-    @Async
+    @Async("emailExecutor")
     @EventListener
     public void handleStatusChanged(ApplicationStatusChangeEvent event) {
         emailService.sendStatusNotification(
                 event.getEmail(),
+                event.getOldStatus(),
                 event.getNewStatus()
         );
     }

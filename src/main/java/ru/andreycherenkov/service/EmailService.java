@@ -16,7 +16,7 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
 
-    public void sendStatusNotification(String to, ApplicationStatus status) {
+    public void sendStatusNotification(String to, ApplicationStatus oldStatus, ApplicationStatus newStatus) {
         var message = new SimpleMailMessage();
 
         message.setFrom(smtpEmail);
@@ -24,7 +24,11 @@ public class EmailService {
         message.setSubject("Статус кредитной заявки");
 
         message.setText(
-                "Статус вашей кредитной заявки изменен на " + status.getRusTranslator().get()
+                String.format(
+                        "Статус вашей кредитной заявки изменен с %s на %s",
+                        oldStatus.getRusTranslator().get(),
+                        newStatus.getRusTranslator().get()
+                )
         );
 
         mailSender.send(message);

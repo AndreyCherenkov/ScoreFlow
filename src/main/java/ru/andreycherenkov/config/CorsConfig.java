@@ -1,4 +1,4 @@
-package ru.andreycherenkov.cors;
+package ru.andreycherenkov.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
