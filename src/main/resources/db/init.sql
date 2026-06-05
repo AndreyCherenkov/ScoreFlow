@@ -83,7 +83,8 @@ CREATE TABLE loan_applications
 -- =====================================================
 CREATE TABLE refresh_tokens
 (
-    token_hash      VARCHAR(1024) PRIMARY KEY,
+    token_id UUID PRIMARY KEY,
+    token_hash      VARCHAR(1024) NOT NULL UNIQUE ,
     created_at      TIMESTAMP    NOT NULL,
     expiration_date TIMESTAMP    NOT NULL,
     revoked         BOOLEAN      NOT NULL DEFAULT FALSE,

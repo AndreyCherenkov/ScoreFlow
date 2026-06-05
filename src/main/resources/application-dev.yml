@@ -27,3 +27,11 @@ spring:
 app:
   security:
     jwt: ${JWT_SECRET}
+
+#inner validation, logs, etc...
+server:
+  error:
+    include-message: never
+    include-binding-errors: never
+    include-stacktrace: never
+    include-exception: false

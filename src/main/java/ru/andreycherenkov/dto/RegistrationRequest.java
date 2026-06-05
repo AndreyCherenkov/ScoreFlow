@@ -6,6 +6,7 @@ import lombok.Getter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+
 @Getter
 public class RegistrationRequest {
 
@@ -34,6 +35,7 @@ public class RegistrationRequest {
 
     @NotNull
     @Positive
+    @Digits(integer = 8, fraction = 2) //todo document it, values depends on database constrains/settings
     private BigDecimal income;
 
     @Email

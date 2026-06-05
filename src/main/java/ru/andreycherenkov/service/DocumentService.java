@@ -14,6 +14,7 @@ import ru.andreycherenkov.repository.DocumentRepository;
 
 import java.util.UUID;
 
+//todo refactor
 //todo в шаблоне заявке определить поведение для всех ApplicationStatus
 @Service
 @AllArgsConstructor

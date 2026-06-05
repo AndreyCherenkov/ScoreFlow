@@ -34,7 +34,6 @@ public class ApplicationController {
 
     @PostMapping
     public ApplicationCreateResponse createApplication(@RequestBody ApplicationCreateRequest request) {
-        System.out.println(request);
         return applicationService.createLoanApplication(request);
     }
 

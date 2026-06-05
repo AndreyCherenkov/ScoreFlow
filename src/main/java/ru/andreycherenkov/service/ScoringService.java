@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.andreycherenkov.dto.ScoringResponse;
 import ru.andreycherenkov.entity.ScoringResult;
 import ru.andreycherenkov.enums.ApplicationStatus;
+import ru.andreycherenkov.exception.LoanApplicationNotFound;
 import ru.andreycherenkov.repository.ApplicationRepository;
 import ru.andreycherenkov.repository.ScoringResultRepository;
 import ru.andreycherenkov.scoring.ScoringRule;
@@ -28,7 +29,7 @@ public class ScoringService {
     @Transactional
     public ScoringResponse computeScore(UUID applicationId) {
         var application = applicationRepository.findById(applicationId)
-                .orElseThrow(() -> new RuntimeException("Application not found: " + applicationId));
+                .orElseThrow(() -> new LoanApplicationNotFound("Application not found: " + applicationId));
         applicationService.updateStatus(application, ApplicationStatus.IN_REVIEW);
 
         var totalScore = scoringRules.stream()

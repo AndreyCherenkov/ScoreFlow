@@ -10,6 +10,8 @@ import ru.andreycherenkov.dto.ApplicationCreateResponse;
 import ru.andreycherenkov.entity.LoanApplication;
 import ru.andreycherenkov.dto.LoanApplicationResponse;
 import ru.andreycherenkov.enums.ApplicationStatus;
+import ru.andreycherenkov.exception.LoanApplicationNotFound;
+import ru.andreycherenkov.exception.UserNotFound;
 import ru.andreycherenkov.mapper.LoanApplicationMapper;
 import ru.andreycherenkov.repository.ApplicationRepository;
 import ru.andreycherenkov.repository.CustomerRepository;
@@ -37,7 +39,7 @@ public class LoanApplicationService {
         var application = applicationRepository
 //                .findBy(applicationId, currentUserId) //todo получать id из контекста
                 .findById(applicationId)
-                .orElseThrow(() -> new RuntimeException("Application not found"));
+                .orElseThrow(() -> new LoanApplicationNotFound("Application not found"));
 
         return applicationMapper.fromEntity(application);
     }
@@ -45,7 +47,7 @@ public class LoanApplicationService {
     @Transactional
     public ApplicationCreateResponse createLoanApplication(ApplicationCreateRequest request) {
         var customer = customerRepository.findById(request.getCustomerId()).orElseThrow(
-                () -> new IllegalArgumentException("Customer not found") //todo define exception type, maybe needs custom type?
+                () -> new UserNotFound("Customer not found") //todo define exception type, maybe needs custom type?
         );
 
         var application = new LoanApplication(
@@ -84,7 +86,7 @@ public class LoanApplicationService {
 
     public void deleteLoanApplication(UUID applicationId) {
         applicationRepository.findById(applicationId).orElseThrow(
-                () -> new IllegalArgumentException("Application not found")
+                () -> new LoanApplicationNotFound("Application not found")
         );
         applicationRepository.deleteById(applicationId);
     }

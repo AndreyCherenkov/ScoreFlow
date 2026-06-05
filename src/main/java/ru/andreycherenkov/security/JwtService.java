@@ -37,14 +37,15 @@ public class JwtService {
                 .compact();
     }
 
-    public String generateRefreshToken(String phoneNumber, UUID userId) { //todo mclaims map
+    public String generateRefreshToken(String phoneNumber, UUID userId) {
         return Jwts.builder()
+                .setId(UUID.randomUUID().toString())
                 .setSubject(phoneNumber)
                 .claim("phoneNumber", phoneNumber)
-                .claim("userId", userId)
+                .claim("userId", userId.toString())
                 .setIssuer(applicationName)
                 .setIssuedAt(Date.from(Instant.now()))
-                .setExpiration(Date.from(Instant.now().plus(24, ChronoUnit.HOURS)))
+                .setExpiration(Date.from(Instant.now().plus(12, ChronoUnit.HOURS)))
                 .signWith(getKey())
                 .compact();
     }
@@ -58,10 +59,6 @@ public class JwtService {
 
     public String extractPhoneNumber(String token) {
         return extractClaims(token).getBody().getSubject(); //todo  читать
-    }
-
-    public String extractUserId(String token) {
-        return extractClaims(token).getBody().get("userId").toString();
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {
